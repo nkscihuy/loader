@@ -2,13 +2,6 @@ local CoreGui = game:GetService("CoreGui")
 
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
-Lalu cari bagian Headers dan ganti menjadi:
-Headers = {
-    Authorization = "Bearer " .. key,
-    ["X-NKS-Username"] = HttpService:UrlEncode(Players.LocalPlayer.Name),
-    ["X-NKS-Display-Name"] = HttpService:UrlEncode(Players.LocalPlayer.DisplayName),
-    ["X-NKS-User-Id"] = tostring(Players.LocalPlayer.UserId),
-},
 
 local httpRequest = request or http_request or (syn and syn.request)
 if type(httpRequest) ~= "function" then
@@ -169,6 +162,9 @@ submit.Activated:Connect(function()
         Method = "GET",
         Headers = {
             Authorization = "Bearer " .. key,
+            ["X-NKS-Username"] = HttpService:UrlEncode(Players.LocalPlayer.Name),
+            ["X-NKS-Display-Name"] = HttpService:UrlEncode(Players.LocalPlayer.DisplayName),
+            ["X-NKS-User-Id"] = tostring(Players.LocalPlayer.UserId),
         },
     })
 
