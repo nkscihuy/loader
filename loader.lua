@@ -142,7 +142,7 @@ end)
 
 local busy = false
 
-submit.Activated:Connect(function()
+local function submitKey()
     if busy then return end
 
     local key = input.Text:match("^%s*(.-)%s*$")
@@ -168,7 +168,6 @@ submit.Activated:Connect(function()
         },
     })
 
-    key = nil
     if not gui.Parent then return end
 
     if not ok or type(response) ~= "table" then
@@ -178,6 +177,10 @@ submit.Activated:Connect(function()
     else
         local chunk, err = loadstring(response.Body)
         if chunk then
+            if type(writefile) == "function" then
+                pcall(writefile, "NKS_key.txt", key)
+            end
+            key = nil
             input.Text = ""
             gui:Destroy()
             chunk()
@@ -190,4 +193,14 @@ submit.Activated:Connect(function()
     status.TextColor3 = Color3.fromRGB(255, 140, 140)
     busy = false
     submit.Text = "EXECUTE"
-end)
+end
+
+submit.Activated:Connect(submitKey)
+
+if type(readfile) == "function" then
+    local ok, savedKey = pcall(readfile, "NKS_key.txt")
+    if ok and type(savedKey) == "string" and savedKey:match("%S") then
+        input.Text = savedKey
+        task.defer(submitKey)
+    end
+end
